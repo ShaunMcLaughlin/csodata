@@ -60,11 +60,11 @@
     
     #Empty out the cache of unused files if a new file is being downloaded
     #checks if csodata directory in cache before attempting to flush it
-    if(flush_cache & dir.exists(paste0(R.cache::getCacheRootPath(),"\\csodata"))){
+    if(flush_cache & dir.exists(file.path(R.cache::getCacheRootPath(),"csodata"))){
       file.remove(
         rownames(
-          fileSnapshot(paste0(R.cache::getCacheRootPath(),"\\csodata"), full.names = T, recursive = T)$info[!lubridate::`%within%`(
-            fileSnapshot(paste0(R.cache::getCacheRootPath(),"\\csodata"), full.names = T, recursive = T)$info[,"mtime"],
+          fileSnapshot(file.path(R.cache::getCacheRootPath(),"csodata"), full.names = T, recursive = T)$info[!lubridate::`%within%`(
+            fileSnapshot(file.path(R.cache::getCacheRootPath(),"csodata"), full.names = T, recursive = T)$info[,"mtime"],
             lubridate::interval(start = Sys.Date() - lubridate::days(2) , end = Sys.Date() + lubridate::days(1) )) , ]
         ) #lubridate::`%m+%`(Sys.Date(),months(-1)) 
         )
@@ -96,7 +96,7 @@
     names(tbl3)[3] <- "id"
     
     tbl3$LastModified <- as.POSIXct(tbl3$LastModified,
-                                    format = "%Y-%m-%dT%H:%M:%SZ")
+                                    format = "%Y-%m-%dT%H:%M:%S")
     
     if (get_frequency){
       tbl3 <- cbind(tbl3,

@@ -87,7 +87,7 @@ cso_get_data <- function(table_code,pivot_format = "wide", wide_format = lifecyc
   
   # Append ids as new column ------------
   if (include_ids) {
-    data_id <- rjstat::fromJSONstat(parse(json_data)$result,
+    data_id <- rjstat::fromJSONstat(json_data,
                                     naming = "id", use_factors = use_factors
     )
     names(data_id)[substr(names(data_id),0,1) == "C"] <-paste0(names(data)[substr(names(data_id),0,1) == "C"],".id")
@@ -210,11 +210,11 @@ cso_download_tbl <- function(table_code, cache = TRUE,
   
   #Empty out the cache of unused files if a new file is being downloaded
   #checks if csodata directory in cache before attempting to flush it
-  if(flush_cache & dir.exists(paste0(R.cache::getCacheRootPath(),"\\csodata"))){
+  if(flush_cache & dir.exists(file.path(R.cache::getCacheRootPath(),"csodata"))){
     file.remove(
       rownames(
-        fileSnapshot(paste0(R.cache::getCacheRootPath(),"\\csodata"), full.names = T, recursive = T)$info[!lubridate::`%within%`(
-          fileSnapshot(paste0(R.cache::getCacheRootPath(),"\\csodata"), full.names = T, recursive = T)$info[,"mtime"],
+        fileSnapshot(file.path(R.cache::getCacheRootPath(),"csodata"), full.names = T, recursive = T)$info[!lubridate::`%within%`(
+          fileSnapshot(file.path(R.cache::getCacheRootPath(),"csodata"), full.names = T, recursive = T)$info[,"mtime"],
           lubridate::interval(start = Sys.Date() - lubridate::days(2) , end = Sys.Date() + lubridate::days(1))) , ]
       )
       )
